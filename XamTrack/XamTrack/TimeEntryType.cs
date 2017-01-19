@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace XamTrack
 {
+    /// <summary>
+    /// Possible types of Time Entries in a Time Report.
+    /// </summary>
     public enum TimeEntryType
     {
         StartEntry,
