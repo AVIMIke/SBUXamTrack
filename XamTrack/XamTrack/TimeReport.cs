@@ -39,5 +39,71 @@ namespace XamTrack
             this.Id = id;
             this.Name = name;
         }
+
+        /// <summary>
+        /// Calculates the total time this report has tracked.
+        /// </summary>
+        public TimeSpan TotalTime
+        {
+            get
+            {
+                TimeSpan total = new TimeSpan(0);
+
+                TimeEntry currentStartEntry = null;
+                foreach(TimeEntry entry in this)
+                {
+                    if(currentStartEntry != null)
+                    {
+                        if(entry.EntryType == TimeEntryType.EndEntry)
+                        {
+                            total.Add(entry.Timestamp - currentStartEntry.Timestamp);
+                            currentStartEntry = null;
+                        }
+                    }
+                    else
+                    {
+                        if (entry.EntryType == TimeEntryType.StartEntry)
+                            currentStartEntry = entry;
+                    }
+                }
+
+                if (currentStartEntry != null)
+                    total = DateTime.UtcNow - currentStartEntry.Timestamp;
+
+                return total;
+            }
+        }
+
+        /// <summary>
+        /// Calculates how long the last actve time of this report was or currently is.
+        /// </summary>
+        public TimeSpan LatestActiveTime
+        {
+            get
+            {
+                TimeEntry lastStart = null;
+                TimeEntry lastStop = null;
+
+                foreach (TimeEntry entry in this)
+                {
+                    if(entry.EntryType == TimeEntryType.StartEntry)
+                    {
+                        lastStart = entry;
+                        lastStop = null;
+                    }
+                    else if (entry.EntryType == TimeEntryType.EndEntry)
+                    {
+                        lastStop = entry;
+                    }
+                }
+
+                if (lastStart == null)
+                    return TimeSpan.Zero;
+                else if (lastStop == null)
+                    return DateTime.UtcNow - lastStop.Timestamp;
+                else
+                    return lastStop.Timestamp - lastStart.Timestamp;
+            }
+        }
     }
 }

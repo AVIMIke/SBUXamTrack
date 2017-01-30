@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,8 +11,20 @@ namespace XamTrack
     /// <summary>
     /// Handles all the reports. Users should use this instead of making new reports.
     /// </summary>
-    public class ReportManager
+    public class ReportManager : INotifyPropertyChanged
     {
+        private static ReportManager _instance = null;
+        public static ReportManager Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    _instance = new ReportManager();
+
+                return _instance;
+            }
+        }
+
         private Dictionary<uint, TimeReport> _reports;
         private TimeReport _activeReport;
 
@@ -23,6 +36,15 @@ namespace XamTrack
         public ReportManager()
         {
             _reports = new Dictionary<uint, TimeReport>();
+
+            this.AddReport("Test1");
+
+            this.AddReport("Test2");
+
+            this.AddReport("Test3");
+
+            this.AddReport("Test4");
+
         }
 
         /// <summary>
@@ -33,6 +55,8 @@ namespace XamTrack
         {
             TimeReport r = new TimeReport(GenerateReportId(), reportName);
             _reports.Add(r.Id, r);
+
+            this.RaisePropertyChanged("ReportList");
         }
 
         /// <summary>
@@ -42,15 +66,26 @@ namespace XamTrack
         public void RemoveReport(uint reportId)
         {
             _reports.Remove(reportId);
+
+            this.RaisePropertyChanged("ReportList");
         }
 
         /// <summary>
         /// Gets a summary of all the reports in the system.
         /// </summary>
         /// <returns>A list of all the reports in the system.</returns>
-        public List<TimeReport> GetReportSummary()
+        public List<TimeReport> GetAllReportSummary()
         {
-            return new List<TimeReport>(_reports.Values);
+            return _reports.Values.ToList();
+        }
+
+        /// <summary>
+        /// Get the report the the system has Active.
+        /// </summary>
+        /// <returns>A reference to the active report.</returns>
+        public TimeReport GetActiveReport()
+        {
+            return _activeReport;
         }
 
         /// <summary>
@@ -71,6 +106,9 @@ namespace XamTrack
             newEntry.EntryType = TimeEntryType.StartEntry;
             newEntry.Timestamp = DateTime.UtcNow;
             _activeReport.Add(newEntry);
+
+
+            this.RaisePropertyChanged("ActiveReport");
         }
 
         /// <summary>
@@ -87,6 +125,8 @@ namespace XamTrack
             _activeReport.Add(newEntry);
 
             _activeReport = null;
+
+            this.RaisePropertyChanged("ActiveReport");
         }
 
         /// <summary>
@@ -98,6 +138,22 @@ namespace XamTrack
             uint rId = nextReportId;
             nextReportId++;
             return rId;
+        }
+
+        /// <summary>
+        /// Implementation of INotifyPropertyChanged
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Helper method to raise a property changed event in a safe way.
+        /// </summary>
+        /// <param name="prop"></param>
+        private void RaisePropertyChanged(string prop)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+                handler(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

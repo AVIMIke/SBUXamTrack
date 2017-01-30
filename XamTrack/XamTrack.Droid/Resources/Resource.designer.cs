@@ -28,30 +28,33 @@ namespace XamTrack.Droid
 		{
 		}
 		
-		public partial class Main
+		public partial class TrackingOverview
 		{
+			
+			// aapt resource value: 0x7f050005
+			public const int AddTask = 2131034117;
 			
 			// aapt resource value: 0x7f050004
 			public const int BottomLayout = 2131034116;
 			
-			// aapt resource value: 0x7f050003
-			public const int ProjectList = 2131034115;
-			
 			// aapt resource value: 0x7f050001
-			public const int ScrollContent = 2131034113;
-			
-			// aapt resource value: 0x7f050000
-			public const int ScrollRoot = 2131034112;
+			public const int CurrentTaskName = 2131034113;
 			
 			// aapt resource value: 0x7f050002
-			public const int TopLayout = 2131034114;
+			public const int CurrentTaskTime = 2131034114;
 			
-			static Main()
+			// aapt resource value: 0x7f050003
+			public const int TaskList = 2131034115;
+			
+			// aapt resource value: 0x7f050000
+			public const int TopLayout = 2131034112;
+			
+			static TrackingOverview()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
 			}
 			
-			private Main()
+			private TrackingOverview()
 			{
 			}
 		}
@@ -85,30 +88,11 @@ namespace XamTrack.Droid
 			}
 		}
 		
-		public partial class Id
-		{
-			
-			// aapt resource value: 0x7f060000
-			public const int textView1 = 2131099648;
-			
-			// aapt resource value: 0x7f060001
-			public const int textView2 = 2131099649;
-			
-			static Id()
-			{
-				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
-			}
-			
-			private Id()
-			{
-			}
-		}
-		
 		public partial class Layout
 		{
 			
 			// aapt resource value: 0x7f030000
-			public const int Main = 2130903040;
+			public const int TrackingOverview = 2130903040;
 			
 			static Layout()
 			{
