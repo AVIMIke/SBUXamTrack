@@ -100,7 +100,7 @@ namespace XamTrack
                 if (lastStart == null)
                     return TimeSpan.Zero;
                 else if (lastStop == null)
-                    return DateTime.UtcNow - lastStop.Timestamp;
+                    return DateTime.UtcNow - lastStart.Timestamp;
                 else
                     return lastStop.Timestamp - lastStart.Timestamp;
             }

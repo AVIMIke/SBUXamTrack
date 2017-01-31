@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using XamTrack.SystemServices;
 
 namespace XamTrack
 {
@@ -127,6 +129,75 @@ namespace XamTrack
             _activeReport = null;
 
             this.RaisePropertyChanged("ActiveReport");
+        }
+
+        /// <summary>
+        /// Saves a flat file holding the data needed for this manager.
+        /// The format is as follows
+        /// 
+        /// ActiveReportID (or -1 if no active report)
+        /// XML Serialized list of TimeReports
+        /// </summary>
+        public void Save()
+        {
+            string data = "";
+
+            if (_activeReport == null)
+            {
+                data += "-1\n";
+            }
+            else
+            {
+                data += _activeReport.Id + "\n";
+            }
+
+            List<TimeReport> saveReports = this.GetAllReportSummary();
+            System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(saveReports.GetType());
+
+            using (StringWriter textWriter = new StringWriter())
+            {
+                x.Serialize(textWriter, saveReports);
+                data = textWriter.ToString();
+            }
+
+            ServiceContainer.FileService.WriteFile("ReportData.dat", data);
+        }
+
+        /// <summary>
+        /// Loads the flat file holding the data needed for this manager.
+        /// The expected format is as follows
+        /// 
+        /// ActiveReportID (or -1 if no active report)
+        /// XML Serialized list of TimeReports
+        /// </summary>
+        public void Load()
+        {
+            this._reports.Clear();
+            this._activeReport = null;
+
+            string data = ServiceContainer.FileService.ReadFile("ReportData.dat");
+            if (string.IsNullOrEmpty(data))
+                return;
+
+            int firstLineIndex = data.IndexOf("\n");
+            string activeReport = data.Substring(0, firstLineIndex);
+            string reportList = data.Substring(firstLineIndex);
+
+            System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(typeof(List<TimeReport>));
+
+            List<TimeReport> loadedReports = null;
+            using (TextReader reader = new StringReader(reportList))
+            {
+                loadedReports = x.Deserialize(reader) as List<TimeReport>;
+            }
+
+            if (loadedReports != null)
+            {
+                foreach (TimeReport r in loadedReports)
+                {
+                    _reports.Add(r.Id, r);
+                }
+            }
         }
 
         /// <summary>

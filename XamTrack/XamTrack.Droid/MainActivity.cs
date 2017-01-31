@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Linq;
-
 using Android.App;
-using Android.Content;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 using Android.OS;
-using System.Threading.Tasks;
 using System.Threading;
+using XamTrack.SystemServices;
+using XamTrack.Droid.AndroidServices;
 
 namespace XamTrack.Droid
 {
@@ -18,12 +15,13 @@ namespace XamTrack.Droid
 	[Activity (Label = "XamTrack.Droid", MainLauncher = true, Icon = "@drawable/icon")]
 	public class MainActivity : Activity
 	{
-
-        private Button addTaskButton;
+		private Button addTaskButton;
         private TextView currentTaskName;
         private TextView currentTaskTime;
         private ListView taskList;
-        ArrayAdapter<string> taskAdapter;
+        private ArrayAdapter<string> taskAdapter;
+
+		private Timer activeTaskUpdater;
 
         /// <summary>
         /// Override of Android Activity OnCreate
@@ -32,6 +30,9 @@ namespace XamTrack.Droid
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
+
+            ServiceContainer.FileService = new AndroidFileService();
+            ReportManager.Instance.Load();
 
 			SetContentView (Resource.Layout.TrackingOverview);
 
@@ -46,6 +47,8 @@ namespace XamTrack.Droid
             taskList.Adapter = taskAdapter;
             taskList.ItemClick += taskList_ItemClick;
             taskList.ItemLongClick += taskList_ItemLongClick;
+
+			activeTaskUpdater = new Timer(HandleActiveTaskTimerCallback, null, Timeout.Infinite, Timeout.Infinite);
 
             ReportManager.Instance.PropertyChanged += ReportManager_PropertyChanged;
 		}
@@ -70,9 +73,14 @@ namespace XamTrack.Droid
         {
             base.OnDestroy();
 
+            ReportManager.Instance.Save();
+
             addTaskButton.Click -= addTaskButton_Click;
             taskList.ItemClick -= taskList_ItemClick;
             taskList.ItemLongClick -= taskList_ItemLongClick;
+
+			activeTaskUpdater.Dispose();
+			activeTaskUpdater = null;
 
             ReportManager.Instance.PropertyChanged -= ReportManager_PropertyChanged;
         }
@@ -126,7 +134,14 @@ namespace XamTrack.Droid
 
             if(e.PropertyName.Equals("ActiveReport"))
             {
-                // TODO: Start the UI activly updating the current activity time.
+				if (ReportManager.Instance.GetActiveReport() != null)
+				{
+					activeTaskUpdater.Change(100, 100);
+				}
+				else
+				{
+					activeTaskUpdater.Change(Timeout.Infinite, Timeout.Infinite);
+				}
             }
         }
 
@@ -157,6 +172,11 @@ namespace XamTrack.Droid
                     }
                 });
         }
+
+		private void HandleActiveTaskTimerCallback(object state)
+		{
+			RefreshUI();
+		}
 	}
 }
 
