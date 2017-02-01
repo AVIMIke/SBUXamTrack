@@ -18,6 +18,7 @@ namespace XamTrack.Droid
 		private Button addTaskButton;
         private TextView currentTaskName;
         private TextView currentTaskTime;
+        private TextView totalTaskTime;
         private ListView taskList;
         private ArrayAdapter<string> taskAdapter;
 
@@ -39,6 +40,7 @@ namespace XamTrack.Droid
             addTaskButton = FindViewById<Button>(Resource.TrackingOverview.AddTask);
             currentTaskName = FindViewById<TextView>(Resource.TrackingOverview.CurrentTaskName);
             currentTaskTime = FindViewById<TextView>(Resource.TrackingOverview.CurrentTaskTime);
+            totalTaskTime = FindViewById<TextView>(Resource.TrackingOverview.TotalTaskTime);
             taskList = FindViewById<ListView>(Resource.TrackingOverview.TaskList);
 
             addTaskButton.Click += addTaskButton_Click;
@@ -81,6 +83,25 @@ namespace XamTrack.Droid
 
 			activeTaskUpdater.Dispose();
 			activeTaskUpdater = null;
+
+            ReportManager.Instance.PropertyChanged -= ReportManager_PropertyChanged;
+        }
+
+        /// <summary>
+        /// Override of the Android Activity OnPause.
+        /// </summary>
+        protected override void OnPause()
+        {
+            base.OnPause();
+
+            ReportManager.Instance.Save();
+
+            addTaskButton.Click -= addTaskButton_Click;
+            taskList.ItemClick -= taskList_ItemClick;
+            taskList.ItemLongClick -= taskList_ItemLongClick;
+
+            //activeTaskUpdater.Dispose();
+            //activeTaskUpdater = null;
 
             ReportManager.Instance.PropertyChanged -= ReportManager_PropertyChanged;
         }
@@ -164,11 +185,13 @@ namespace XamTrack.Droid
                     {
                         currentTaskName.Text = activeReport.Name;
                         currentTaskTime.Text = activeReport.LatestActiveTime.ToString("hh\\:mm\\:ss");
+                        totalTaskTime.Text = activeReport.TotalTime.ToString("hh\\:mm\\:ss");
                     }
                     else
                     {
                         currentTaskName.Text = "Select a task to start tracking.";
                         currentTaskTime.Text = "";
+                        totalTaskTime.Text = "";
                     }
                 });
         }

@@ -24,7 +24,9 @@ namespace XamTrack.Droid.AndroidServices
         /// <returns>The contents of the file or an emptry string if no file is found.</returns>
         public string ReadFile(string fileName)
         {
-            string file = Path.Combine(Android.OS.Environment.DataDirectory.Path, fileName);
+            string path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+            string file = Path.Combine(path, fileName);
+            
 
             try
             {
@@ -48,7 +50,9 @@ namespace XamTrack.Droid.AndroidServices
         /// <param name="content">The string payload of the file.</param>
         public void WriteFile(string fileName, string content)
         {
-            string file = Path.Combine(Android.OS.Environment.DataDirectory.Path, fileName);
+            string path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+            string file = Path.Combine(path, fileName);
+            File.Delete(file);
 
             using (var streamWriter = new StreamWriter(file, true))
             {

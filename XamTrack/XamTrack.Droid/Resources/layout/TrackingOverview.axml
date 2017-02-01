@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:minWidth="25px"
         android:minHeight="25px"
         android:id="@+TrackingOverview/TopLayout"
@@ -18,15 +18,23 @@
         <TextView
             android:text="Large Text"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+TrackingOverview/CurrentTaskName" />
+        <TextView
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+TrackingOverview/CurrentTaskTime"
+            android:padding="10dp" />
         <TextView
             android:text="Medium Text"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+TrackingOverview/CurrentTaskTime"
+            android:gravity="right"
+            android:id="@+TrackingOverview/TotalTaskTime"
             android:padding="10dp" />
     </LinearLayout>
     <ListView

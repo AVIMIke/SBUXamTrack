@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace XamTrack
 {
     /// <summary>
     /// A specific task the user wants to track time to.
     /// </summary>
-    public class TimeReport : List<TimeEntry>
+    public class TimeReport 
     {
         /// <summary>
         /// Id to reference this report by.
@@ -29,6 +31,20 @@ namespace XamTrack
             set;
         }
 
+        public List<TimeEntry> TimeEntrys
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Default constructor, needed for XMLSerializer?
+        /// </summary>
+        public TimeReport() : base()
+        {
+            this.TimeEntrys = new List<TimeEntry>();
+        }
+
         /// <summary>
         /// Contructor.
         /// </summary>
@@ -38,6 +54,7 @@ namespace XamTrack
         {
             this.Id = id;
             this.Name = name;
+            this.TimeEntrys = new List<TimeEntry>();
         }
 
         /// <summary>
@@ -50,13 +67,13 @@ namespace XamTrack
                 TimeSpan total = new TimeSpan(0);
 
                 TimeEntry currentStartEntry = null;
-                foreach(TimeEntry entry in this)
+                foreach(TimeEntry entry in this.TimeEntrys)
                 {
                     if(currentStartEntry != null)
                     {
                         if(entry.EntryType == TimeEntryType.EndEntry)
                         {
-                            total.Add(entry.Timestamp - currentStartEntry.Timestamp);
+                            total += (entry.Timestamp - currentStartEntry.Timestamp);
                             currentStartEntry = null;
                         }
                     }
@@ -68,7 +85,7 @@ namespace XamTrack
                 }
 
                 if (currentStartEntry != null)
-                    total = DateTime.UtcNow - currentStartEntry.Timestamp;
+                    total += DateTime.UtcNow - currentStartEntry.Timestamp;
 
                 return total;
             }
@@ -84,7 +101,7 @@ namespace XamTrack
                 TimeEntry lastStart = null;
                 TimeEntry lastStop = null;
 
-                foreach (TimeEntry entry in this)
+                foreach (TimeEntry entry in this.TimeEntrys)
                 {
                     if(entry.EntryType == TimeEntryType.StartEntry)
                     {

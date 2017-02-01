@@ -107,7 +107,7 @@ namespace XamTrack
             TimeEntry newEntry = new TimeEntry();
             newEntry.EntryType = TimeEntryType.StartEntry;
             newEntry.Timestamp = DateTime.UtcNow;
-            _activeReport.Add(newEntry);
+            _activeReport.TimeEntrys.Add(newEntry);
 
 
             this.RaisePropertyChanged("ActiveReport");
@@ -124,7 +124,7 @@ namespace XamTrack
             TimeEntry newEntry = new TimeEntry();
             newEntry.EntryType = TimeEntryType.EndEntry;
             newEntry.Timestamp = DateTime.UtcNow;
-            _activeReport.Add(newEntry);
+            _activeReport.TimeEntrys.Add(newEntry);
 
             _activeReport = null;
 
@@ -157,7 +157,7 @@ namespace XamTrack
             using (StringWriter textWriter = new StringWriter())
             {
                 x.Serialize(textWriter, saveReports);
-                data = textWriter.ToString();
+                data += textWriter.ToString();
             }
 
             ServiceContainer.FileService.WriteFile("ReportData.dat", data);
@@ -181,22 +181,30 @@ namespace XamTrack
 
             int firstLineIndex = data.IndexOf("\n");
             string activeReport = data.Substring(0, firstLineIndex);
-            string reportList = data.Substring(firstLineIndex);
+            string reportList = data.Substring(firstLineIndex+1);
 
             System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(typeof(List<TimeReport>));
 
             List<TimeReport> loadedReports = null;
-            using (TextReader reader = new StringReader(reportList))
+            try
             {
-                loadedReports = x.Deserialize(reader) as List<TimeReport>;
-            }
-
-            if (loadedReports != null)
-            {
-                foreach (TimeReport r in loadedReports)
+                using (TextReader reader = new StringReader(reportList))
                 {
-                    _reports.Add(r.Id, r);
+                    loadedReports = x.Deserialize(reader) as List<TimeReport>;
                 }
+
+                if (loadedReports != null)
+                {
+                    foreach (TimeReport r in loadedReports)
+                    {
+                        _reports.Add(r.Id, r);
+                        nextReportId = r.Id + 1;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return;
             }
         }
 
