@@ -6,6 +6,7 @@ using Android.OS;
 using System.Threading;
 using XamTrack.SystemServices;
 using XamTrack.Droid.AndroidServices;
+using Android.Content;
 
 namespace XamTrack.Droid
 {
@@ -106,7 +107,8 @@ namespace XamTrack.Droid
         /// <param name="e">Arguments about the click.</param>
         void addTaskButton_Click(object sender, EventArgs e)
         {
-            ReportManager.Instance.AddReport("AddedReport");
+            //ReportManager.Instance.AddReport("AddedReport");
+            StartActivity(typeof(AddTaskActivity));
         }
 
         /// <summary>
@@ -116,7 +118,8 @@ namespace XamTrack.Droid
         /// <param name="e">Information about the longpress</param>
         void taskList_ItemLongClick(object sender, AdapterView.ItemLongClickEventArgs e)
         {
-            throw new NotImplementedException();
+            TimeReport selected = ReportManager.Instance.GetAllReportSummary().ElementAt(e.Position);
+            ReportManager.Instance.RemoveReport(selected.Id);
         }
 
         /// <summary>

@@ -39,14 +39,6 @@ namespace XamTrack
         {
             _reports = new Dictionary<uint, TimeReport>();
 
-            this.AddReport("Test1");
-
-            this.AddReport("Test2");
-
-            this.AddReport("Test3");
-
-            this.AddReport("Test4");
-
         }
 
         /// <summary>

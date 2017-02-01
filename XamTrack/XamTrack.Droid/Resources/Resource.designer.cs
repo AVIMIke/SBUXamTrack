@@ -28,29 +28,66 @@ namespace XamTrack.Droid
 		{
 		}
 		
-		public partial class TrackingOverview
+		public partial class AddTask
 		{
 			
-			// aapt resource value: 0x7f050006
-			public const int AddTask = 2131034118;
+			// aapt resource value: 0x7f050007
+			public const int Add = 2131034119;
 			
-			// aapt resource value: 0x7f050005
-			public const int BottomLayout = 2131034117;
+			// aapt resource value: 0x7f050003
+			public const int BottomLayout = 2131034115;
+			
+			// aapt resource value: 0x7f050006
+			public const int Cancel = 2131034118;
 			
 			// aapt resource value: 0x7f050001
-			public const int CurrentTaskName = 2131034113;
+			public const int Header = 2131034113;
 			
-			// aapt resource value: 0x7f050002
-			public const int CurrentTaskTime = 2131034114;
+			// aapt resource value: 0x7f050005
+			public const int NameInput = 2131034117;
 			
 			// aapt resource value: 0x7f050004
-			public const int TaskList = 2131034116;
+			public const int NameItem = 2131034116;
+			
+			// aapt resource value: 0x7f050002
+			public const int TaskInfo = 2131034114;
 			
 			// aapt resource value: 0x7f050000
 			public const int TopLayout = 2131034112;
 			
-			// aapt resource value: 0x7f050003
-			public const int TotalTaskTime = 2131034115;
+			static AddTask()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private AddTask()
+			{
+			}
+		}
+		
+		public partial class TrackingOverview
+		{
+			
+			// aapt resource value: 0x7f060006
+			public const int AddTask = 2131099654;
+			
+			// aapt resource value: 0x7f060005
+			public const int BottomLayout = 2131099653;
+			
+			// aapt resource value: 0x7f060001
+			public const int CurrentTaskName = 2131099649;
+			
+			// aapt resource value: 0x7f060002
+			public const int CurrentTaskTime = 2131099650;
+			
+			// aapt resource value: 0x7f060004
+			public const int TaskList = 2131099652;
+			
+			// aapt resource value: 0x7f060000
+			public const int TopLayout = 2131099648;
+			
+			// aapt resource value: 0x7f060003
+			public const int TotalTaskTime = 2131099651;
 			
 			static TrackingOverview()
 			{
@@ -95,7 +132,10 @@ namespace XamTrack.Droid
 		{
 			
 			// aapt resource value: 0x7f030000
-			public const int TrackingOverview = 2130903040;
+			public const int AddTask = 2130903040;
+			
+			// aapt resource value: 0x7f030001
+			public const int TrackingOverview = 2130903041;
 			
 			static Layout()
 			{
