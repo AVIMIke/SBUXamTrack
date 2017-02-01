@@ -21,8 +21,10 @@ namespace XamTrack.Droid
         private TextView totalTaskTime;
         private ListView taskList;
         private ArrayAdapter<string> taskAdapter;
-
+        
 		private Timer activeTaskUpdater;
+
+        private const string totalTime = "Total Time: ";
 
         /// <summary>
         /// Override of Android Activity OnCreate
@@ -94,16 +96,7 @@ namespace XamTrack.Droid
         {
             base.OnPause();
 
-            ReportManager.Instance.Save();
-
-            addTaskButton.Click -= addTaskButton_Click;
-            taskList.ItemClick -= taskList_ItemClick;
-            taskList.ItemLongClick -= taskList_ItemLongClick;
-
-            //activeTaskUpdater.Dispose();
-            //activeTaskUpdater = null;
-
-            ReportManager.Instance.PropertyChanged -= ReportManager_PropertyChanged;
+            ReportManager.Instance.Save();;
         }
 
         /// <summary>
@@ -185,7 +178,7 @@ namespace XamTrack.Droid
                     {
                         currentTaskName.Text = activeReport.Name;
                         currentTaskTime.Text = activeReport.LatestActiveTime.ToString("hh\\:mm\\:ss");
-                        totalTaskTime.Text = activeReport.TotalTime.ToString("hh\\:mm\\:ss");
+                        totalTaskTime.Text = totalTime + activeReport.TotalTime.ToString("hh\\:mm\\:ss");
                     }
                     else
                     {

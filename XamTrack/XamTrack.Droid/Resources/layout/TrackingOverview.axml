@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:minWidth="25px"
         android:minHeight="25px"
         android:id="@+TrackingOverview/TopLayout"
@@ -21,21 +21,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+TrackingOverview/CurrentTaskName" />
-        <TextView
-            android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+TrackingOverview/CurrentTaskTime"
-            android:padding="10dp" />
-        <TextView
-            android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="right"
-            android:id="@+TrackingOverview/TotalTaskTime"
-            android:padding="10dp" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+TrackingOverview/TopLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+TrackingOverview/CurrentTaskTime"
+                android:padding="10dp" />
+            <TextView
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:id="@+TrackingOverview/TotalTaskTime"
+                android:padding="10dp" />
+        </LinearLayout>
     </LinearLayout>
     <ListView
         android:minWidth="25px"
