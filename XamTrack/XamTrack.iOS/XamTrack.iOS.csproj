@@ -69,6 +69,7 @@
   <ItemGroup>
     <ProjectReference Include="..\XamTrack\XamTrack.csproj">
       <Name>XamTrack</Name>
+      <Project>{E167427F-8C98-4E29-BBA6-F26B89979FA2}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +144,15 @@
     <Compile Include="ViewController.designer.cs">
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="iOSServices\iOSFileService.cs" />
+    <Compile Include="AddReportViewController.cs" />
+    <Compile Include="AddReportViewController.designer.cs">
+      <DependentUpon>AddReportViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TimeReportTableViewSource.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="iOSServices\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

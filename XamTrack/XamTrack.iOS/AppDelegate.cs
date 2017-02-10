@@ -1,5 +1,6 @@
 ﻿using Foundation;
 using UIKit;
+using XamTrack.SystemServices;
 
 namespace XamTrack.iOS
 {
@@ -28,6 +29,8 @@ namespace XamTrack.iOS
 			// This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) 
 			// or when the user quits the application and it begins the transition to the background state.
 			// Games should use this method to pause the game.
+
+			ReportManager.Instance.Save();
 		}
 
 		public override void DidEnterBackground (UIApplication application)
@@ -46,6 +49,12 @@ namespace XamTrack.iOS
 		{
 			// Restart any tasks that were paused (or not yet started) while the application was inactive. 
 			// If the application was previously in the background, optionally refresh the user interface.
+			if (ServiceContainer.FileService == null)
+			{
+				ServiceContainer.FileService = new iOSFileService();
+			}
+
+			ReportManager.Instance.Load();
 		}
 
 		public override void WillTerminate (UIApplication application)
