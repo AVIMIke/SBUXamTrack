@@ -23,6 +23,11 @@ namespace XamTrack.iOS
 			_reports.AddRange(r);
 		}
 
+		public TimeReport ReportAt(NSIndexPath index)
+		{
+			return _reports[index.Row];
+		}
+
 		public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
 		{
 			UITableViewCell cell = tableView.DequeueReusableCell(CellIdentifier);

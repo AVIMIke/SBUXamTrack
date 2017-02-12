@@ -59,6 +59,9 @@ namespace XamTrack
         /// <param name="reportId">The id of the report to remove.</param>
         public void RemoveReport(uint reportId)
         {
+			if (_activeReport != null && _activeReport.Id == reportId)
+				StopTrackingReport();
+			
             _reports.Remove(reportId);
 
             this.RaisePropertyChanged("ReportList");
@@ -153,6 +156,8 @@ namespace XamTrack
             }
 
             ServiceContainer.FileService.WriteFile("ReportData.dat", data);
+
+			this.RaisePropertyChanged("Saved");
         }
 
         /// <summary>
@@ -178,26 +183,36 @@ namespace XamTrack
             System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(typeof(List<TimeReport>));
 
             List<TimeReport> loadedReports = null;
-            try
-            {
-                using (TextReader reader = new StringReader(reportList))
-                {
-                    loadedReports = x.Deserialize(reader) as List<TimeReport>;
-                }
+			try
+			{
+				using (TextReader reader = new StringReader(reportList))
+				{
+					loadedReports = x.Deserialize(reader) as List<TimeReport>;
+				}
 
-                if (loadedReports != null)
-                {
-                    foreach (TimeReport r in loadedReports)
-                    {
-                        _reports.Add(r.Id, r);
-                        nextReportId = r.Id + 1;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                return;
-            }
+				if (loadedReports != null)
+				{
+					foreach (TimeReport r in loadedReports)
+					{
+						_reports.Add(r.Id, r);
+						nextReportId = r.Id + 1;
+					}
+				}
+
+				if (!string.IsNullOrEmpty(activeReport) && !activeReport.Equals("-1"))
+				{
+					uint activeId = uint.Parse(activeReport);
+					_activeReport = _reports[activeId];
+				}
+			}
+			catch (Exception ex)
+			{
+				return;
+			}
+			finally
+			{
+				this.RaisePropertyChanged("Loaded");
+			}
         }
 
         /// <summary>

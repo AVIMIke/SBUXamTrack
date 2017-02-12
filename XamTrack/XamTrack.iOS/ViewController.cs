@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading;
+using CoreGraphics;
+using Foundation;
 using UIKit;
 
 namespace XamTrack.iOS
@@ -27,12 +29,39 @@ namespace XamTrack.iOS
 			_reportAdapter.ReportSelected += ReportAdapter_ReportSelected;
 			ReportList.Source = _reportAdapter;
 
+			UILongPressGestureRecognizer longpressDetector = new UILongPressGestureRecognizer(HandleAction);
+			ReportList.AddGestureRecognizer(longpressDetector);
+
 			RefreshUI();
+		}
+
+		void HandleAction(UILongPressGestureRecognizer gesture)
+		{
+			CGPoint touch = gesture.LocationInView(ReportList);
+
+			NSIndexPath indexPath = ReportList.IndexPathForRowAtPoint(touch);
+			if (indexPath != null && gesture.State == UIGestureRecognizerState.Began)
+			{
+				LongPressOnReport(_reportAdapter.ReportAt(indexPath));
+			}
+
 		}
 
 		void ReportAdapter_ReportSelected(object sender, TimeReport report)
 		{
-			ReportManager.Instance.StartTrackingReport(report.Id);
+			if(ReportManager.Instance.GetActiveReport() == report)
+			{
+				ReportManager.Instance.StopTrackingReport();
+			}
+			else
+			{
+				ReportManager.Instance.StartTrackingReport(report.Id);
+			}
+		}
+
+		void LongPressOnReport(TimeReport report)
+		{
+			ReportManager.Instance.RemoveReport(report.Id);
 		}
 
 		private void HandleActiveTaskTimerCallback(object state)
@@ -44,7 +73,7 @@ namespace XamTrack.iOS
 		{
 			RefreshUI();
 
-			if (e.PropertyName.Equals("ActiveReport"))
+			if (e.PropertyName.Equals("ActiveReport") || e.PropertyName.Equals("Loaded"))
 			{
 				UpdateTaskTimer();
 			}
